@@ -1,0 +1,15 @@
+node_modules
+dist
+build
+.env
+.env.local
+*.log
+.DS_Store
+coverage
+*.tsbuildinfo
+
+# Never emit build output next to sources (api uses dist/)
+packages/api/src/**/*.js
+packages/api/src/**/*.js.map
+packages/api/src/**/*.d.ts
+packages/api/src/**/*.d.ts.map

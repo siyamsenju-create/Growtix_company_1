@@ -1,0 +1,20 @@
+{
+  "name": "growtix",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @growtix/shared-types && npm run build -w @growtix/api && npm run build -w @growtix/workers && npm run build -w @growtix/web",
+    "dev": "concurrently -n api,web,workers \"npm run dev -w @growtix/api\" \"npm run dev -w @growtix/web\" \"npm run dev:workers\"",
+    "dev:api": "npm run dev -w @growtix/api",
+    "dev:web": "npm run dev -w @growtix/web",
+    "dev:workers": "npm run build -w @growtix/api && npm run dev -w @growtix/workers",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "typescript": "^5.7.3"
+  }
+}
