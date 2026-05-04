@@ -26,6 +26,9 @@ async function processJob(name: string, payload: JobPayload): Promise<void> {
     case "send_email":
       await sendEmailStub(payload);
       break;
+    case "send_transactional":
+      await sendTransactional(payload);
+      break;
     case "aggregate_analytics":
       await aggregateAnalytics(payload);
       break;
@@ -112,6 +115,32 @@ async function generateMessage(payload: JobPayload): Promise<void> {
     metadata: { aiGenerated: true, preview: Boolean(payload.metadata?.previewOnly) },
     events: [{ type: "sent", at: new Date() }],
   });
+}
+
+async function sendTransactional(payload: JobPayload): Promise<void> {
+  const t = payload.metadata?.transactional;
+  if (!t) return;
+  if (env.emailProvider === "resend" && env.resendApiKey) {
+    const r = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: env.emailFrom,
+        to: [t.to],
+        subject: t.subject,
+        text: t.text,
+      }),
+    });
+    if (!r.ok) {
+      console.error("[send_transactional] Resend error:", r.status, await r.text());
+    }
+    return;
+  }
+  console.log(`[send_transactional] kind=${t.kind} to=${t.to}`);
+  console.log(t.text);
 }
 
 async function sendEmailStub(payload: JobPayload): Promise<void> {

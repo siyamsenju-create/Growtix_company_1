@@ -6,6 +6,10 @@ import { CaseStudiesPage } from "./pages/marketing/CaseStudiesPage";
 import { BookPage } from "./pages/marketing/BookPage";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterPage } from "./pages/auth/RegisterPage";
+import { RegisterCheckEmailPage } from "./pages/auth/RegisterCheckEmailPage";
+import { VerifyEmailPage } from "./pages/auth/VerifyEmailPage";
+import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage";
+import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage";
 import { AppLayout } from "./layouts/AppLayout";
 import { LeadsPage } from "./pages/app/LeadsPage";
 import { CampaignsPage } from "./pages/app/CampaignsPage";
@@ -49,6 +53,10 @@ export function App() {
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register/check-email" element={<RegisterCheckEmailPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         <Route
           path="/app"

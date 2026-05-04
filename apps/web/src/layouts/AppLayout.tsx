@@ -60,6 +60,25 @@ export function AppLayout({ admin }: { admin?: boolean }) {
         </div>
       </aside>
       <main style={{ padding: "1.5rem 2rem", background: "var(--bg)" }}>
+        {user?.emailVerified === false && (
+          <div
+            role="status"
+            style={{
+              marginBottom: "1rem",
+              padding: "0.75rem 1rem",
+              borderRadius: 8,
+              border: "1px solid var(--border)",
+              background: "var(--surface-2)",
+              fontSize: "0.875rem",
+            }}
+          >
+            Your email is not verified yet. Check your inbox or{" "}
+            <Link to="/register/check-email" state={{ email: user.email }} style={{ color: "var(--accent)", fontWeight: 600 }}>
+              resend the verification link
+            </Link>
+            .
+          </div>
+        )}
         <Outlet />
       </main>
     </div>

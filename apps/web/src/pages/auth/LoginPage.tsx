@@ -39,6 +39,11 @@ export function LoginPage() {
             Password
             <input name="password" type="password" required style={input} autoComplete="current-password" />
           </label>
+          <div style={{ textAlign: "right", marginTop: "-0.5rem" }}>
+            <Link to="/forgot-password" style={{ fontSize: "0.8125rem", color: "var(--accent)", fontWeight: 600 }}>
+              Forgot password?
+            </Link>
+          </div>
           {error && <p style={{ color: "crimson", margin: 0, fontSize: "0.875rem" }}>{error}</p>}
           <button type="submit" className="btn btn-primary" disabled={pending}>
             {pending ? "Signing in…" : "Sign in"}

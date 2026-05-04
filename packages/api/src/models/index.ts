@@ -19,6 +19,14 @@ const UserSchema = new Schema(
     role: { type: String, enum: ["client", "admin"], default: "client", index: true },
     orgId: { type: Schema.Types.ObjectId, ref: "Organization", required: true, index: true },
     settings: { type: Schema.Types.Mixed },
+    /** Incremented on password change to invalidate refresh JWTs. */
+    tokenVersion: { type: Number, default: 0 },
+    emailVerifiedAt: { type: Date, default: undefined },
+    emailVerificationTokenHash: { type: String, index: true },
+    emailVerificationExpiresAt: { type: Date },
+    passwordResetTokenHash: { type: String, index: true },
+    passwordResetExpiresAt: { type: Date },
+    passwordChangedAt: { type: Date },
   },
   { timestamps: true }
 );

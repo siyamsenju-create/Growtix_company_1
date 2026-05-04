@@ -20,7 +20,9 @@ async function main(): Promise<void> {
   const existing = await User.findOne({ email });
   if (existing) {
     if (existing.role !== "admin") {
-      await User.findByIdAndUpdate(existing._id, { $set: { role: "admin" } });
+      await User.findByIdAndUpdate(existing._id, {
+        $set: { role: "admin", emailVerifiedAt: existing.emailVerifiedAt ?? new Date() },
+      });
       console.log("Updated existing user to admin:", email);
     } else {
       console.log("Admin already exists:", email);
@@ -35,6 +37,8 @@ async function main(): Promise<void> {
     passwordHash,
     orgId: org._id,
     role: "admin",
+    emailVerifiedAt: new Date(),
+    tokenVersion: 0,
   });
   console.log("Created admin user:", email, "Password:", password);
 }

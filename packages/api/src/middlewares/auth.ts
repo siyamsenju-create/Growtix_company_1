@@ -8,6 +8,8 @@ export type AuthPayload = {
   orgId: string;
   role: UserRole;
   type: "access" | "refresh";
+  /** Password reset / invalidation generation; missing in old JWTs treated as 0 */
+  tv?: number;
 };
 
 declare global {
@@ -18,12 +20,29 @@ declare global {
   }
 }
 
-export function signAccessToken(payload: Omit<AuthPayload, "type">): string {
-  return jwt.sign({ ...payload, type: "access" }, env.jwtSecret, { expiresIn: "15m" });
+export type SignTokenInput = {
+  sub: string;
+  orgId: string;
+  role: UserRole;
+  tv?: number;
+};
+
+export function signAccessToken(payload: SignTokenInput): string {
+  const tv = payload.tv ?? 0;
+  return jwt.sign(
+    { sub: payload.sub, orgId: payload.orgId, role: payload.role, type: "access", tv },
+    env.jwtSecret,
+    { expiresIn: "15m" }
+  );
 }
 
-export function signRefreshToken(payload: Omit<AuthPayload, "type">): string {
-  return jwt.sign({ ...payload, type: "refresh" }, env.jwtRefreshSecret, { expiresIn: "7d" });
+export function signRefreshToken(payload: SignTokenInput): string {
+  const tv = payload.tv ?? 0;
+  return jwt.sign(
+    { sub: payload.sub, orgId: payload.orgId, role: payload.role, type: "refresh", tv },
+    env.jwtRefreshSecret,
+    { expiresIn: "7d" }
+  );
 }
 
 export function verifyAccessToken(token: string): AuthPayload {

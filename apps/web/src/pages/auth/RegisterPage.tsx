@@ -1,14 +1,20 @@
 import { useState, type CSSProperties } from "react";
 import type { FormEvent } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/auth/AuthContext";
 
 export function RegisterPage() {
   const { register, user } = useAuth();
+  const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
-  if (user) return <Navigate to="/app/leads" replace />;
+  if (user) {
+    if (user.emailVerified === false) {
+      return <Navigate to="/register/check-email" replace state={{ email: user.email }} />;
+    }
+    return <Navigate to="/app/leads" replace />;
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -16,7 +22,12 @@ export function RegisterPage() {
     setPending(true);
     const fd = new FormData(e.currentTarget);
     try {
-      await register(String(fd.get("email")), String(fd.get("password")), String(fd.get("orgName")));
+      const u = await register(String(fd.get("email")), String(fd.get("password")), String(fd.get("orgName")));
+      if (u.emailVerified === false) {
+        navigate("/register/check-email", { replace: true, state: { email: u.email } });
+      } else {
+        navigate("/app/leads", { replace: true });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {

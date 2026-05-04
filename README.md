@@ -18,3 +18,5 @@ MERN monorepo for Growtix: AI lead generation API (`packages/api`), BullMQ worke
 4. `npm run dev` (API, web, workers)
 
 Optional admin seed: `npm run seed -w @growtix/api`
+
+Email verification and password reset use `PUBLIC_WEB_URL`, `EMAIL_FROM`, and `EMAIL_PROVIDER` (`console` logs links in the worker; set `RESEND_API_KEY` and `EMAIL_PROVIDER=resend` to send mail). See `.env.example`.

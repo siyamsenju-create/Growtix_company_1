@@ -8,12 +8,20 @@ export type JobName =
   | "score_lead"
   | "generate_message"
   | "send_email"
+  | "send_transactional"
   | "send_linkedin"
   | "sync_crm"
   | "aggregate_analytics"
   | "webhook_process"
   | "discover_leads"
   | "automation_evaluate";
+
+export type TransactionalEmailMeta = {
+  kind: "verify_email" | "password_reset";
+  to: string;
+  subject: string;
+  text: string;
+};
 
 export type JobPayload = {
   orgId: string;
@@ -22,7 +30,7 @@ export type JobPayload = {
   userId?: string;
   provider?: string;
   rawBody?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, unknown> & { transactional?: TransactionalEmailMeta };
 };
 
 let queue: Queue<JobPayload> | null = null;
